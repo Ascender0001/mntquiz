@@ -64,11 +64,8 @@
     "submitting": "Beküldés…"
   },
   "result": {
-    "passTitle": "Gratulálunk — sikerült!",
-    "passBody": "Adatait elmentettük. A sikeres résztvevőkkel felvesszük a kapcsolatot.",
-    "failTitle": "Köszönjük a részvételt!",
-    "failBody": "Sajnos ezúttal nem érte el a sikeres ponthatárt.",
-    "score": "Eredménye: {score} / {total}.",
+    "submittedTitle": "Válaszait beküldtük!",
+    "goodLuck": "Köszönjük, hogy játszott! Sok szerencsét!",
     "playAgain": "Vissza a kezdéshez"
   },
   "admin": {

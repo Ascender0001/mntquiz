@@ -2,14 +2,7 @@
 
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { Button, Card, Checkbox, PageShell, TextField } from '@/components/ui';
-import {
-  ArrowLeftIcon,
-  CheckIcon,
-  HeartIcon,
-  MapPinIcon,
-  SunIcon,
-  TrophyIcon
-} from '@/components/icons';
+import { ArrowLeftIcon, CheckIcon, MapPinIcon, SunIcon } from '@/components/icons';
 import { distanceMeters } from '@/lib/geo';
 import { t } from '@/lib/strings';
 
@@ -37,7 +30,6 @@ type Stage =
   | 'result';
 
 type Registration = { firstName: string; lastName: string; email: string; phone: string };
-type ResultData = { passed: boolean; score: number; total: number };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const GEOFENCE_DISABLED = process.env.NEXT_PUBLIC_DISABLE_GEOFENCE === 'true';
@@ -53,7 +45,6 @@ export default function GamePage() {
   const [distance, setDistance] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [registration, setRegistration] = useState<Registration | null>(null);
-  const [result, setResult] = useState<ResultData | null>(null);
 
   useEffect(() => {
     fetch('/api/quiz')
@@ -252,8 +243,6 @@ export default function GamePage() {
               setError(t('common.genericError'));
               return;
             }
-            const data = (await res.json()) as ResultData;
-            setResult(data);
             setStage('result');
           } catch {
             setError(t('common.genericError'));
@@ -263,42 +252,19 @@ export default function GamePage() {
     );
   }
 
-  if (stage === 'result' && result) {
-    const pct = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
+  if (stage === 'result') {
     return (
       <PageShell>
         <Card className="relative overflow-hidden text-center">
-          {result.passed ? <Confetti /> : null}
+          <Confetti />
           <div className="relative">
-            <div
-              className={`animate-celebrate mx-auto flex h-24 w-24 items-center justify-center rounded-full shadow-lg ${
-                result.passed
-                  ? 'bg-brand-gradient-anim text-white shadow-emerald-900/25'
-                  : 'bg-slate-100 text-slate-400 shadow-slate-300/40'
-              }`}
-            >
-              {result.passed ? (
-                <TrophyIcon className="h-12 w-12" />
-              ) : (
-                <HeartIcon className="h-12 w-12" />
-              )}
+            <div className="animate-celebrate mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-brand-gradient-anim text-white shadow-lg shadow-emerald-900/25">
+              <CheckIcon className="h-12 w-12" strokeWidth={2.5} />
             </div>
-            <h1
-              className={`mt-5 text-2xl font-extrabold ${
-                result.passed ? 'text-gradient bg-brand-gradient-anim' : 'text-brand-800'
-              }`}
-            >
-              {result.passed ? t('result.passTitle') : t('result.failTitle')}
+            <h1 className="text-gradient bg-brand-gradient-anim mt-5 text-2xl font-extrabold">
+              {t('result.submittedTitle')}
             </h1>
-            <p className="mx-auto mt-3 max-w-xs text-slate-600">
-              {result.passed ? t('result.passBody') : t('result.failBody')}
-            </p>
-
-            <div className="mx-auto mt-6 inline-flex items-baseline gap-2 rounded-2xl bg-slate-50 px-5 py-3 ring-1 ring-slate-900/5">
-              <span className="text-3xl font-extrabold text-brand-700">{result.score}</span>
-              <span className="text-lg font-medium text-slate-400">/ {result.total}</span>
-              <span className="ml-1 text-sm font-semibold text-slate-400">· {pct}%</span>
-            </div>
+            <p className="mx-auto mt-3 max-w-xs text-slate-600">{t('result.goodLuck')}</p>
           </div>
 
           <div className="mt-7">
