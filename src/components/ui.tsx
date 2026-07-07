@@ -3,63 +3,116 @@ import { CheckIcon } from '@/components/icons';
 import { t } from '@/lib/strings';
 
 /**
- * Cheap decorative background: soft radial-gradient "blobs" that slowly float.
- * No CSS filter blur (expensive on low-end phones) — the softness comes from
- * the gradient alpha falloff, so it stays smooth everywhere.
+ * Immersive "summer by the lake" scene behind the content: a glowing sun with
+ * soft rotating rays, floating light particles, drifting colour blobs and a
+ * layered meadow/lake silhouette. Everything animates via transform/opacity
+ * (no filter blur, no layout) so it stays smooth on phones, and it's disabled
+ * for `prefers-reduced-motion`. Fixed so the scene stays put while content
+ * scrolls (a gentle parallax feel).
  */
 function DecorLayer() {
   const blobs: { cls: string; style: CSSProperties }[] = [
     {
-      // Warm summer sun, glowing in the top-right corner.
-      cls: 'blob blob-b',
-      style: {
-        top: '-4rem',
-        right: '-4rem',
-        width: '17rem',
-        height: '17rem',
-        background:
-          'radial-gradient(circle at 60% 40%, rgba(250,204,21,0.38), rgba(251,191,36,0.12) 55%, transparent 72%)'
-      }
-    },
-    {
-      // Fresh grass green, top-left.
       cls: 'blob blob-a',
       style: {
         top: '-5rem',
         left: '-4rem',
         width: '18rem',
         height: '18rem',
-        background: 'radial-gradient(circle at 30% 30%, rgba(0,184,95,0.32), transparent 70%)'
+        background: 'radial-gradient(circle at 30% 30%, rgba(0,184,95,0.28), transparent 70%)'
       }
     },
     {
-      // Lime, mid-left.
       cls: 'blob blob-c',
       style: {
-        top: '38%',
+        top: '34%',
         left: '-6rem',
         width: '15rem',
         height: '15rem',
-        background: 'radial-gradient(circle at 50% 50%, rgba(163,230,53,0.30), transparent 70%)'
+        background: 'radial-gradient(circle at 50% 50%, rgba(163,230,53,0.26), transparent 70%)'
       }
     },
     {
-      // Lake teal, bottom.
-      cls: 'blob blob-c',
+      cls: 'blob blob-b',
       style: {
-        bottom: '-6rem',
-        left: '25%',
-        width: '20rem',
-        height: '20rem',
-        background: 'radial-gradient(circle at 50% 50%, rgba(20,184,166,0.22), transparent 70%)'
+        top: '28%',
+        right: '-6rem',
+        width: '16rem',
+        height: '16rem',
+        background: 'radial-gradient(circle at 50% 50%, rgba(45,212,191,0.22), transparent 70%)'
       }
     }
   ];
+
+  const particleColors = [
+    'rgba(255,255,255,0.9)',
+    'rgba(190,242,100,0.85)',
+    'rgba(253,224,71,0.8)'
+  ];
+  const particles = Array.from({ length: 12 }, (_, i) => {
+    const left = (i * 41 + 6) % 100;
+    const size = 4 + (i % 4) * 2;
+    const dur = 12 + (i % 5) * 3;
+    const dx = ((i % 3) - 1) * 26;
+    const opacity = 0.35 + (i % 3) * 0.18;
+    const style = {
+      left: `${left}%`,
+      bottom: '-12px',
+      width: `${size}px`,
+      height: `${size}px`,
+      background: particleColors[i % particleColors.length],
+      animationDelay: `${-i * 1.8}s`,
+      ['--d']: `${dur}s`,
+      ['--dx']: `${dx}px`,
+      ['--o']: opacity
+    } as CSSProperties;
+    return <span key={i} className="particle" style={style} />;
+  });
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden" aria-hidden="true">
+      {/* Sun */}
+      <div
+        className="sun-rays"
+        style={{ top: '-9rem', right: '-7rem', width: '28rem', height: '28rem' }}
+      />
+      <div
+        className="sun-glow"
+        style={{
+          top: '-5rem',
+          right: '-3rem',
+          width: '17rem',
+          height: '17rem',
+          background:
+            'radial-gradient(circle, rgba(253,224,71,0.6), rgba(251,191,36,0.18) 48%, transparent 72%)'
+        }}
+      />
+
+      {/* Colour blobs */}
       {blobs.map((b, i) => (
         <div key={i} className={b.cls} style={b.style} />
       ))}
+
+      {/* Drifting light particles */}
+      {particles}
+
+      {/* Meadow / lake silhouette along the bottom */}
+      <svg
+        className="scene-hills absolute inset-x-0 bottom-0 w-full"
+        style={{ height: '26vh' }}
+        viewBox="0 0 1440 240"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,150 C240,100 480,180 720,140 C960,100 1200,180 1440,130 L1440,240 L0,240 Z"
+          fill="rgba(45,212,191,0.14)"
+        />
+        <path
+          d="M0,185 C300,140 560,205 900,165 C1160,135 1320,195 1440,168 L1440,240 L0,240 Z"
+          fill="rgba(0,144,77,0.16)"
+        />
+      </svg>
     </div>
   );
 }
@@ -114,7 +167,7 @@ function AppFooter() {
 export function PageShell({ children }: { children: ReactNode }) {
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-gradient-to-b from-lime-50 via-white to-emerald-50"
+      className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-gradient-to-b from-amber-50 via-white to-emerald-50"
       style={{
         paddingLeft: 'env(safe-area-inset-left)',
         paddingRight: 'env(safe-area-inset-right)'

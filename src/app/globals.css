@@ -190,6 +190,82 @@ body {
   animation: float-c 16s ease-in-out infinite;
 }
 
+/* ---- Immersive summer scene ---- */
+@keyframes sun-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes drift-up {
+  0% {
+    transform: translate3d(0, 24px, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--o, 0.6);
+  }
+  88% {
+    opacity: var(--o, 0.6);
+  }
+  100% {
+    transform: translate3d(var(--dx, 0px), -128px, 0);
+    opacity: 0;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/* Glowing sun */
+.sun-glow {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform, opacity;
+  animation: sun-pulse 7s ease-in-out infinite;
+}
+/* Soft rotating sun rays (transform only → composited, cheap) */
+.sun-rays {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(251, 191, 36, 0.12) 0deg 4deg,
+    transparent 4deg 17deg
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 58%);
+  mask-image: radial-gradient(circle, #000 0%, transparent 58%);
+  animation: spin-slow 140s linear infinite;
+}
+/* Drifting light particles (pollen / sun sparkles) */
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform, opacity;
+  animation: drift-up var(--d, 14s) linear infinite;
+}
+/* Gently swaying meadow / lake silhouette */
+.scene-hills {
+  animation: sway 9s ease-in-out infinite;
+}
+
 /* Respect users who prefer reduced motion / save battery */
 @media (prefers-reduced-motion: reduce) {
   *,

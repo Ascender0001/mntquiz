@@ -141,8 +141,16 @@ export default function GamePage() {
     return (
       <PageShell>
         <Card className="text-center">
-          <div className="animate-pop-in mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient-anim text-white shadow-lg shadow-emerald-900/25">
-            <SunIcon className="h-10 w-10" />
+          <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
+            <span
+              className="absolute -inset-5 rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(253,224,71,0.55), transparent 70%)'
+              }}
+            />
+            <span className="animate-pop-in relative flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient-anim text-white shadow-lg shadow-emerald-900/25">
+              <SunIcon className="h-10 w-10" />
+            </span>
           </div>
 
           <p className="mt-5 text-xs font-bold uppercase tracking-widest text-amber-600">
