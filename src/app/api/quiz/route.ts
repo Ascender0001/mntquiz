@@ -33,12 +33,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'not_configured' }, { status: 503 });
   }
 
-  // The quiz must be started by an organizer. Until then, don't expose the
-  // geofence/questions — the client shows a waiting screen and polls this.
-  if (!config.quizStarted) {
-    return NextResponse.json({ started: false });
-  }
-
   const allActive = await prisma.question.findMany({
     where: { active: true },
     select: {
@@ -61,7 +55,6 @@ export async function GET(req: NextRequest) {
     .map((q) => ({ ...q, options: shuffle(q.options) }));
 
   return NextResponse.json({
-    started: true,
     geofence: {
       centerLat: config.centerLat,
       centerLng: config.centerLng,

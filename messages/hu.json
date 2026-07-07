@@ -22,10 +22,6 @@
     "sr-Cyrl": "Српски",
     "en": "English"
   },
-  "waiting": {
-    "title": "A kvíz hamarosan kezdődik",
-    "message": "Kérjük, várjon, amíg a szervező elindítja a kvízt. Az oldal automatikusan folytatódik."
-  },
   "landing": {
     "title": "Üdvözöljük a Nyárhangoló kvízen",
     "welcome": "Üdvözöljük!",
@@ -86,17 +82,6 @@
       "questions": "Kérdések",
       "submissions": "Beküldések",
       "config": "Beállítások"
-    },
-    "quizStatus": {
-      "title": "A kvíz állapota",
-      "started": "A kvíz elindítva",
-      "stopped": "A kvíz leállítva",
-      "startedHint": "A résztvevők most játszhatnak.",
-      "stoppedHint": "A résztvevők várakozó képernyőt látnak.",
-      "start": "Kvíz indítása",
-      "stop": "Kvíz leállítása",
-      "startedMsg": "A kvíz elindult.",
-      "stoppedMsg": "A kvíz leállítva."
     },
     "dashboard": {
       "title": "Áttekintés",

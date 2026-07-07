@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { ComponentType, SVGProps } from 'react';
 import { prisma } from '@/lib/prisma';
 import { StatCard } from '@/components/admin';
-import QuizStatusToggle from '@/components/QuizStatusToggle';
 import {
   ArrowRightIcon,
   ClipboardListIcon,
@@ -36,10 +35,6 @@ export default async function AdminDashboard() {
     <div>
       <h1 className="text-2xl font-bold text-slate-900">{t('admin.dashboard.title')}</h1>
       <p className="mt-1 text-sm text-slate-500">{t('admin.dashboard.subtitle')}</p>
-
-      <div className="mt-6">
-        <QuizStatusToggle />
-      </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard label={t('admin.dashboard.totalSubmissions')} value={total} />

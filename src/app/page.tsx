@@ -27,7 +27,6 @@ type Coords = { latitude: number; longitude: number };
 
 type Stage =
   | 'loading'
-  | 'waiting'
   | 'landing'
   | 'geo-denied'
   | 'geo-unavailable'
@@ -56,36 +55,15 @@ export default function GamePage() {
   const [registration, setRegistration] = useState<Registration | null>(null);
   const [result, setResult] = useState<ResultData | null>(null);
 
-  // Load the quiz. If the organizer hasn't started it yet, show the waiting
-  // screen; the poll effect below advances automatically once it starts.
-  const loadQuiz = useCallback(async () => {
-    try {
-      const res = await fetch('/api/quiz');
-      const data = await res.json();
-      if (data?.started === false) {
-        setStage((s) => (s === 'loading' || s === 'waiting' ? 'waiting' : s));
-        return false;
-      }
-      setQuiz(data as QuizData);
-      setStage((s) => (s === 'loading' || s === 'waiting' ? 'landing' : s));
-      return true;
-    } catch {
-      setError(t('common.genericError'));
-      return false;
-    }
+  useEffect(() => {
+    fetch('/api/quiz')
+      .then((r) => r.json())
+      .then((data: QuizData) => {
+        setQuiz(data);
+        setStage('landing');
+      })
+      .catch(() => setError(t('common.genericError')));
   }, []);
-
-  useEffect(() => {
-    loadQuiz();
-  }, [loadQuiz]);
-
-  // While waiting for the organizer to start, poll so the page moves on by
-  // itself (no manual refresh needed).
-  useEffect(() => {
-    if (stage !== 'waiting') return;
-    const id = setInterval(loadQuiz, 4000);
-    return () => clearInterval(id);
-  }, [stage, loadQuiz]);
 
   const checkLocation = useCallback(() => {
     if (!quiz) return;
@@ -130,18 +108,6 @@ export default function GamePage() {
       <PageShell>
         <Card>
           <p className="text-center text-slate-700">{error}</p>
-        </Card>
-      </PageShell>
-    );
-  }
-
-  if (stage === 'waiting') {
-    return (
-      <PageShell>
-        <Card className="text-center">
-          <Spinner />
-          <h1 className="mt-5 text-xl font-bold text-brand-800">{t('waiting.title')}</h1>
-          <p className="mx-auto mt-3 max-w-xs text-slate-600">{t('waiting.message')}</p>
         </Card>
       </PageShell>
     );
