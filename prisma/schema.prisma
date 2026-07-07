@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Pooled connection (pgbouncer) used by the app at runtime.
+  url       = env("DATABASE_URL")
+  // Direct connection used by `prisma migrate` (Neon's non-pooled URL).
+  directUrl = env("DIRECT_URL")
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  text      String
+  category  String?
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  options   Option[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active])
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  text       String
+  isCorrect  Boolean  @default(false)
+  order      Int      @default(0)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String
+
+  @@index([questionId])
+}
+
+model Submission {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String?
+  passed    Boolean
+  score     Int
+  total     Int
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+
+  @@index([passed])
+  @@index([createdAt])
+}
+
+// Single-row table (id is always 1) holding per-event configuration.
+model Config {
+  id               Int      @id @default(1)
+  centerLat        Float    @default(46.0879)
+  centerLng        Float    @default(19.7660)
+  radiusMeters     Int      @default(500)
+  passThreshold    Int      @default(3)
+  questionsPerQuiz Int      @default(5)
+  quizStarted      Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+}

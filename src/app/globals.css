@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+/* Official mnt.org.rs banner gradient */
+.bg-brand-gradient {
+  background-image: linear-gradient(
+    91.21deg,
+    #1f884e 0,
+    #00904d 0.01%,
+    #007941 48.4%,
+    #006c3a 100%
+  );
+}
+
+/* Lively summer-green gradient (used on buttons / accents / headings).
+   Static (no per-frame background-position animation) so it stays smooth on
+   phones — especially where it fills text via background-clip. */
+.bg-brand-gradient-anim {
+  background-image: linear-gradient(
+    105deg,
+    #17a34a,
+    #00a15a,
+    #00904d,
+    #007941,
+    #0b9f7a
+  );
+}
+
+/* Gradient text helper */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---- Keyframes (transform/opacity only → GPU friendly) ---- */
+@keyframes gradient-pan {
+  to {
+    background-position: 300% 50%;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  60% {
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -28px, 0) scale(1.08);
+  }
+}
+
+@keyframes float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-28px, 22px, 0) scale(1.12);
+  }
+}
+
+@keyframes float-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(18px, 26px, 0) scale(0.95);
+  }
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(0.6) rotate(-8deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.15) rotate(4deg);
+  }
+  75% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--dx, 0), 120px, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@keyframes progress-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(0, 144, 77, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(0, 144, 77, 0.55);
+  }
+}
+
+/* ---- Animation utility classes ---- */
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-fade-in {
+  animation: fade-in 0.6s ease both;
+}
+.animate-pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-celebrate {
+  animation: celebrate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Floating decorative blobs (cheap: soft radial gradients, no filter blur) */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  will-change: transform;
+}
+.blob-a {
+  animation: float-a 14s ease-in-out infinite;
+}
+.blob-b {
+  animation: float-b 18s ease-in-out infinite;
+}
+.blob-c {
+  animation: float-c 16s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion / save battery */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
