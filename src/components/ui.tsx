@@ -49,7 +49,7 @@ function DecorLayer() {
     'rgba(190,242,100,0.85)',
     'rgba(253,224,71,0.8)'
   ];
-  const particles = Array.from({ length: 12 }, (_, i) => {
+  const particles = Array.from({ length: 8 }, (_, i) => {
     const left = (i * 41 + 6) % 100;
     const size = 4 + (i % 4) * 2;
     const dur = 12 + (i % 5) * 3;
@@ -94,7 +94,7 @@ function DecorLayer() {
       ))}
 
       {/* Drifting light particles */}
-      {particles}
+      <div className="particles">{particles}</div>
 
       {/* Meadow / lake silhouette along the bottom. Anchored 16px below the
           screen edge so the sway animation never exposes a white gap. */}
