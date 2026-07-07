@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { submitSchema } from '@/lib/validation';
 import { isInsideGeofence } from '@/lib/geo';
 import { rateLimit, clientIp } from '@/lib/rateLimit';
+import { gradeTextAnswer } from '@/lib/grading';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,20 +71,22 @@ export async function POST(req: NextRequest) {
 
   // Anti-cheat: accept at most ONE answer per question. Otherwise a client
   // could submit every option for a question and always get it "correct".
-  const chosenByQuestion = new Map<string, string>();
+  const answerByQuestion = new Map<string, { optionId?: string; text?: string }>();
   for (const a of answers) {
-    if (chosenByQuestion.has(a.questionId)) {
+    if (answerByQuestion.has(a.questionId)) {
       return NextResponse.json({ error: 'duplicate_answers' }, { status: 400 });
     }
-    chosenByQuestion.set(a.questionId, a.optionId);
+    answerByQuestion.set(a.questionId, { optionId: a.optionId, text: a.text });
   }
 
-  // Load the correct options for the answered questions.
-  const questionIds = [...chosenByQuestion.keys()];
+  // Load the answered questions with their type + correct options.
+  const questionIds = [...answerByQuestion.keys()];
   const questions = await prisma.question.findMany({
     where: { id: { in: questionIds }, active: true },
     select: {
       id: true,
+      text: true,
+      type: true,
       options: { select: { id: true, isCorrect: true } }
     }
   });
@@ -96,13 +99,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Score one point per active question whose single chosen option is correct.
+  // Score one point per active question answered correctly. Multiple-choice is
+  // graded by option id; free-text is graded by gradeTextAnswer (server-side).
   let score = 0;
   for (const q of questions) {
-    const chosen = chosenByQuestion.get(q.id);
-    const correct = correctByQuestion.get(q.id);
-    if (chosen && correct && correct.has(chosen)) {
-      score += 1;
+    const answer = answerByQuestion.get(q.id);
+    if (!answer) continue;
+    if (q.type === 'text') {
+      if (gradeTextAnswer(q, answer.text)) score += 1;
+    } else {
+      const correct = correctByQuestion.get(q.id);
+      if (answer.optionId && correct && correct.has(answer.optionId)) score += 1;
     }
   }
 

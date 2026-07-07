@@ -14,6 +14,8 @@ model Question {
   id        String   @id @default(cuid())
   text      String
   category  String?
+  // "choice" = multiple choice (auto-graded), "text" = free-text typed answer.
+  type      String   @default("choice")
   active    Boolean  @default(true)
   order     Int      @default(0)
   options   Option[]

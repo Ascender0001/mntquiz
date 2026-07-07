@@ -62,6 +62,7 @@
   "quiz": {
     "progress": "{current}. kérdés a(z) {total}-ból",
     "selectAnswer": "Kérjük, válasszon egy választ",
+    "answerPlaceholder": "Írja ide a válaszát…",
     "next": "Következő",
     "finish": "Befejezés",
     "submitting": "Beküldés…"
@@ -119,6 +120,11 @@
       "questionText": "Kérdés",
       "category": "Kategória",
       "categoryPlaceholder": "pl. Földrajz",
+      "typeLabel": "Kérdés típusa",
+      "typeChoice": "Feleletválasztós",
+      "typeText": "Szöveges (beírós)",
+      "textBadge": "Szöveges",
+      "textHint": "A résztvevő beírja a választ. Jelenleg minden nem üres válasz elfogadott (később AI ellenőrzi).",
       "options": "Válaszlehetőségek",
       "optionPlaceholder": "Válasz szövege",
       "markCorrect": "Helyes",

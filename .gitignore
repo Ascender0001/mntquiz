@@ -32,3 +32,6 @@ yarn-error.log*
 
 # docker volume
 /pgdata
+
+# source question docs (imported via prisma/import-questions.ts)
+*.docx

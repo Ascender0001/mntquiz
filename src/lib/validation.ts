@@ -20,9 +20,11 @@ export const registrationSchema = z.object({
     )
 });
 
+// An answer is either a chosen option (multiple-choice) or typed text.
 export const answerSchema = z.object({
   questionId: z.string().min(1),
-  optionId: z.string().min(1)
+  optionId: z.string().min(1).optional(),
+  text: z.string().max(2000).optional()
 });
 
 export const submitSchema = z.object({
@@ -49,16 +51,25 @@ const optionInput = z.object({
   isCorrect: z.boolean()
 });
 
-export const questionSchema = z.object({
-  text: z.string().trim().min(1).max(1000),
-  category: z.string().trim().max(120).optional().nullable(),
-  active: z.boolean().default(true),
-  order: z.number().int().default(0),
-  options: z
-    .array(optionInput)
-    .min(2, 'at_least_two_options')
-    .refine((opts) => opts.some((o) => o.isCorrect), 'need_correct_option')
-});
+export const questionSchema = z
+  .object({
+    text: z.string().trim().min(1).max(1000),
+    category: z.string().trim().max(120).optional().nullable(),
+    type: z.enum(['choice', 'text']).default('choice'),
+    active: z.boolean().default(true),
+    order: z.number().int().default(0),
+    options: z.array(optionInput).default([])
+  })
+  .superRefine((data, ctx) => {
+    // Only multiple-choice questions need options with a correct one.
+    if (data.type === 'choice') {
+      if (data.options.length < 2) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'at_least_two_options' });
+      } else if (!data.options.some((o) => o.isCorrect)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'need_correct_option' });
+      }
+    }
+  });
 
 export type RegistrationInput = z.infer<typeof registrationSchema>;
 export type SubmitInput = z.infer<typeof submitSchema>;

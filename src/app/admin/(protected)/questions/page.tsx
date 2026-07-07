@@ -6,11 +6,13 @@ import { Hint, PageHeading, Switch, useToast } from '@/components/admin';
 import { CheckIcon, PlusIcon, XIcon } from '@/components/icons';
 import { t } from '@/lib/strings';
 
+type QType = 'choice' | 'text';
 type Option = { id?: string; text: string; isCorrect: boolean };
 type Question = {
   id: string;
   text: string;
   category: string | null;
+  type: QType;
   active: boolean;
   order: number;
   options: Option[];
@@ -20,6 +22,7 @@ type Draft = {
   id?: string;
   text: string;
   category: string;
+  type: QType;
   active: boolean;
   order: number;
   options: Option[];
@@ -28,6 +31,7 @@ type Draft = {
 const emptyDraft = (): Draft => ({
   text: '',
   category: '',
+  type: 'choice',
   active: true,
   order: 0,
   options: [
@@ -70,9 +74,16 @@ export default function QuestionsPage() {
       id: q.id,
       text: q.text,
       category: q.category ?? '',
+      type: q.type,
       active: q.active,
       order: q.order,
-      options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect }))
+      options:
+        q.options.length > 0
+          ? q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect }))
+          : [
+              { text: '', isCorrect: true },
+              { text: '', isCorrect: false }
+            ]
     });
 
   const remove = async (id: string) => {
@@ -95,6 +106,7 @@ export default function QuestionsPage() {
       body: JSON.stringify({
         text: q.text,
         category: q.category,
+        type: q.type,
         active: next,
         order: q.order,
         options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect }))
@@ -111,26 +123,31 @@ export default function QuestionsPage() {
 
   const save = async () => {
     if (!draft) return;
+
     const cleanOptions = draft.options
       .map((o) => ({ text: o.text.trim(), isCorrect: o.isCorrect }))
       .filter((o) => o.text.length > 0);
 
-    if (cleanOptions.length < 2) {
-      setError(t('admin.questions.needTwoOptions'));
-      return;
-    }
-    if (!cleanOptions.some((o) => o.isCorrect)) {
-      setError(t('admin.questions.needCorrect'));
-      return;
+    // Options are only required for multiple-choice questions.
+    if (draft.type === 'choice') {
+      if (cleanOptions.length < 2) {
+        setError(t('admin.questions.needTwoOptions'));
+        return;
+      }
+      if (!cleanOptions.some((o) => o.isCorrect)) {
+        setError(t('admin.questions.needCorrect'));
+        return;
+      }
     }
     setError(null);
 
     const payload = {
       text: draft.text.trim(),
       category: draft.category.trim() || null,
+      type: draft.type,
       active: draft.active,
       order: Number(draft.order) || 0,
-      options: cleanOptions
+      options: draft.type === 'text' ? [] : cleanOptions
     };
 
     const isEdit = Boolean(draft.id);
@@ -215,11 +232,18 @@ export default function QuestionsPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="font-semibold text-slate-900">{q.text}</p>
-                  {q.category ? (
-                    <span className="mt-1 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                      {q.category}
-                    </span>
-                  ) : null}
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {q.type === 'text' ? (
+                      <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        {t('admin.questions.textBadge')}
+                      </span>
+                    ) : null}
+                    {q.category ? (
+                      <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                        {q.category}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <Switch
@@ -230,25 +254,35 @@ export default function QuestionsPage() {
                 </div>
               </div>
 
-              <ul className="mt-3 space-y-1 text-sm">
-                {q.options.map((o, i) => (
-                  <li
-                    key={i}
-                    className={`flex items-center gap-2 ${
-                      o.isCorrect ? 'font-medium text-brand-700' : 'text-slate-600'
-                    }`}
-                  >
-                    <span
-                      className={`flex h-4 w-4 items-center justify-center rounded-full ${
-                        o.isCorrect ? 'bg-brand-100 text-brand-700' : 'bg-slate-100 text-slate-300'
+              {q.type === 'text' ? (
+                <p className="mt-3 text-sm italic text-slate-400">
+                  {t('admin.questions.textHint')}
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1 text-sm">
+                  {q.options.map((o, i) => (
+                    <li
+                      key={i}
+                      className={`flex items-center gap-2 ${
+                        o.isCorrect ? 'font-medium text-brand-700' : 'text-slate-600'
                       }`}
                     >
-                      {o.isCorrect ? <CheckIcon className="h-2.5 w-2.5" strokeWidth={3} /> : null}
-                    </span>
-                    {o.text}
-                  </li>
-                ))}
-              </ul>
+                      <span
+                        className={`flex h-4 w-4 items-center justify-center rounded-full ${
+                          o.isCorrect
+                            ? 'bg-brand-100 text-brand-700'
+                            : 'bg-slate-100 text-slate-300'
+                        }`}
+                      >
+                        {o.isCorrect ? (
+                          <CheckIcon className="h-2.5 w-2.5" strokeWidth={3} />
+                        ) : null}
+                      </span>
+                      {o.text}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <div className="mt-3 flex gap-4 border-t border-slate-100 pt-3">
                 <button
@@ -325,6 +359,31 @@ function QuestionEditor({
           />
 
           <div>
+            <span className="mb-1.5 block text-sm font-medium text-slate-700">
+              {t('admin.questions.typeLabel')}
+            </span>
+            <div className="flex overflow-hidden rounded-xl border border-slate-300">
+              {(['choice', 'text'] as QType[]).map((ty) => (
+                <button
+                  key={ty}
+                  type="button"
+                  onClick={() => setDraft({ ...draft, type: ty })}
+                  className={`flex-1 px-4 py-2.5 text-sm font-medium transition ${
+                    draft.type === ty ? 'bg-brand-700 text-white' : 'bg-white text-slate-600'
+                  }`}
+                >
+                  {ty === 'choice'
+                    ? t('admin.questions.typeChoice')
+                    : t('admin.questions.typeText')}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {draft.type === 'text' ? (
+            <Hint>{t('admin.questions.textHint')}</Hint>
+          ) : (
+          <div>
             <span className="mb-1 block text-sm font-medium text-slate-700">
               {t('admin.questions.options')}
             </span>
@@ -383,6 +442,7 @@ function QuestionEditor({
               + {t('admin.questions.addOption')}
             </button>
           </div>
+          )}
 
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input

@@ -14,7 +14,13 @@ import { distanceMeters } from '@/lib/geo';
 import { t } from '@/lib/strings';
 
 type Option = { id: string; text: string };
-type Question = { id: string; text: string; category: string | null; options: Option[] };
+type Question = {
+  id: string;
+  text: string;
+  category: string | null;
+  type: 'choice' | 'text';
+  options: Option[];
+};
 type Geofence = { centerLat: number; centerLng: number; radiusMeters: number };
 type QuizData = { geofence: Geofence; questions: Question[]; total: number };
 type Coords = { latitude: number; longitude: number };
@@ -508,6 +514,8 @@ function RegistrationForm({
   );
 }
 
+type QuizAnswer = { questionId: string; optionId?: string; text?: string };
+
 function Quiz({
   questions,
   submitting,
@@ -515,13 +523,13 @@ function Quiz({
 }: {
   questions: Question[];
   submitting: boolean;
-  onFinish: (answers: { questionId: string; optionId: string }[]) => void;
+  onFinish: (answers: QuizAnswer[]) => void;
 }) {
   const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<Record<string, string>>({});
+  // One map keyed by questionId: option id (choice) or typed text (text).
+  const [responses, setResponses] = useState<Record<string, string>>({});
   const current = questions[index];
   const isLast = index === questions.length - 1;
-  const chosen = current ? selected[current.id] : undefined;
 
   // Defensive guard: never render the quiz body without a question.
   if (!current) {
@@ -534,11 +542,19 @@ function Quiz({
     );
   }
 
+  const value = responses[current.id];
+  const answered =
+    current.type === 'text' ? Boolean(value && value.trim()) : Boolean(value);
+
   const advance = () => {
-    if (!chosen) return;
+    if (!answered) return;
     if (isLast) {
       onFinish(
-        questions.map((q) => ({ questionId: q.id, optionId: selected[q.id] }))
+        questions.map((q) =>
+          q.type === 'text'
+            ? { questionId: q.id, text: responses[q.id] ?? '' }
+            : { questionId: q.id, optionId: responses[q.id] }
+        )
       );
     } else {
       setIndex((i) => i + 1);
@@ -561,35 +577,53 @@ function Quiz({
           />
         </div>
         <h2 className="mt-5 text-xl font-bold text-slate-900">{current.text}</h2>
-        <div className="mt-5 space-y-3">
-          {current.options.map((opt, i) => {
-            const active = chosen === opt.id;
-            const letter = String.fromCharCode(65 + i); // A, B, C, D…
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => setSelected((s) => ({ ...s, [current.id]: opt.id }))}
-                className={`flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left text-base transition-colors duration-75 active:scale-[0.98] ${
-                  active
-                    ? 'border-brand-600 bg-brand-50 font-semibold text-brand-800 ring-2 ring-brand-500'
-                    : 'border-slate-200 bg-white text-slate-800'
-                }`}
-              >
-                <span
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${
-                    active ? 'bg-brand-gradient-anim text-white' : 'bg-slate-100 text-slate-500'
+
+        {current.type === 'text' ? (
+          <div className="mt-5">
+            <textarea
+              value={value ?? ''}
+              onChange={(e) =>
+                setResponses((r) => ({ ...r, [current.id]: e.target.value }))
+              }
+              placeholder={t('quiz.answerPlaceholder')}
+              rows={3}
+              className="min-h-[104px] w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+            />
+          </div>
+        ) : (
+          <div className="mt-5 space-y-3">
+            {current.options.map((opt, i) => {
+              const active = value === opt.id;
+              const letter = String.fromCharCode(65 + i); // A, B, C, D…
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() =>
+                    setResponses((r) => ({ ...r, [current.id]: opt.id }))
+                  }
+                  className={`flex min-h-[60px] w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left text-base transition-colors duration-75 active:scale-[0.98] ${
+                    active
+                      ? 'border-brand-600 bg-brand-50 font-semibold text-brand-800 ring-2 ring-brand-500'
+                      : 'border-slate-200 bg-white text-slate-800'
                   }`}
                 >
-                  {active ? <CheckIcon className="h-4 w-4" strokeWidth={3} /> : letter}
-                </span>
-                <span className="flex-1">{opt.text}</span>
-              </button>
-            );
-          })}
-        </div>
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${
+                      active ? 'bg-brand-gradient-anim text-white' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    {active ? <CheckIcon className="h-4 w-4" strokeWidth={3} /> : letter}
+                  </span>
+                  <span className="flex-1">{opt.text}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         <div className="mt-6">
-          <Button onClick={advance} disabled={!chosen || submitting}>
+          <Button onClick={advance} disabled={!answered || submitting}>
             {submitting
               ? t('quiz.submitting')
               : isLast

@@ -52,12 +52,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { text, category, active, order, options } = parsed.data;
+  const { text, category, type, active, order, options } = parsed.data;
 
   const question = await prisma.question.create({
     data: {
       text,
       category: category || null,
+      type,
       active,
       order,
       options: {

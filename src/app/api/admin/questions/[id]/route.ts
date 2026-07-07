@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'not_found' }, { status: 404 });
   }
 
-  const { text, category, active, order, options } = parsed.data;
+  const { text, category, type, active, order, options } = parsed.data;
 
   // Replace options wholesale to keep the update simple and predictable.
   const question = await prisma.$transaction(async (tx) => {
@@ -44,6 +44,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       data: {
         text,
         category: category || null,
+        type,
         active,
         order,
         options: {

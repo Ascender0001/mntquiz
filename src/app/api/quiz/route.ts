@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
       id: true,
       text: true,
       category: true,
+      type: true,
       options: {
         select: { id: true, text: true } // isCorrect is intentionally omitted
       }
@@ -52,9 +53,9 @@ export async function GET(req: NextRequest) {
   });
 
   // Randomise per attempt: a shuffled subset of active questions, each with its
-  // answers shuffled. Different players get different questions in a different
-  // order, which discourages answer-sharing between nearby participants.
-  // Scoring is by option id, so all of this is display-only.
+  // answer options shuffled. Different players get different questions in a
+  // different order, which discourages answer-sharing between nearby
+  // participants. Scoring is server-side, so all of this is display-only.
   const randomised = shuffle(allActive)
     .slice(0, config.questionsPerQuiz)
     .map((q) => ({ ...q, options: shuffle(q.options) }));
