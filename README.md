@@ -75,12 +75,19 @@ Secrets live in `.env`:
    - `AUTH_SECRET` = a long random value (`openssl rand -base64 32`)
    - `ADMIN_PASSWORD` = your chosen admin password
    - `NEXT_PUBLIC_DISABLE_GEOFENCE` = `true` (for off-site testing) or `false`
-4. **Deploy.** The build runs `prisma migrate deploy` (creates the tables) and `prisma db seed`
-   (adds the default config + demo questions) automatically, then builds the app.
+4. **Deploy.** The build runs `prisma generate && next build`. Only `DATABASE_URL` is needed
+   at runtime.
 
-> The build seeds demo questions only when the questions table is empty, and upserts the
-> single config row — both are safe to re-run. For a production event you can remove
-> `prisma db seed` from the `build` script in `package.json`.
+> **Schema setup:** run migrations once against Neon before/after first deploy (from your
+> machine, with the env vars set):
+>
+> ```bash
+> DATABASE_URL="<neon-pooled>" DIRECT_URL="<neon-direct>" npx prisma migrate deploy
+> DATABASE_URL="<neon-pooled>" DIRECT_URL="<neon-direct>" npx prisma db seed
+> ```
+>
+> Re-run these whenever you change `schema.prisma`. `DIRECT_URL` (Neon's non-pooled string)
+> is only needed for these migration commands, not at runtime.
 
 **Note:** Vercel runs serverless functions, so the in-memory rate limiter resets between
 requests (it won't actually throttle). Fine for testing; for the live event use a persistent
