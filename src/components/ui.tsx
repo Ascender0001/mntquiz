@@ -96,21 +96,29 @@ function DecorLayer() {
       {/* Drifting light particles */}
       {particles}
 
-      {/* Meadow / lake silhouette along the bottom */}
+      {/* Meadow / lake silhouette along the bottom. Anchored 16px below the
+          screen edge so the sway animation never exposes a white gap. */}
       <svg
-        className="scene-hills absolute inset-x-0 bottom-0 w-full"
-        style={{ height: '26vh' }}
-        viewBox="0 0 1440 240"
+        className="scene-hills absolute inset-x-0 w-full"
+        style={{ height: '30vh', bottom: '-16px' }}
+        viewBox="0 0 1440 280"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
+        {/* back — teal lake */}
         <path
-          d="M0,150 C240,100 480,180 720,140 C960,100 1200,180 1440,130 L1440,240 L0,240 Z"
-          fill="rgba(45,212,191,0.14)"
+          d="M0,150 C240,100 480,180 720,140 C960,100 1200,180 1440,130 L1440,280 L0,280 Z"
+          fill="rgba(45,212,191,0.13)"
         />
+        {/* middle — green */}
         <path
-          d="M0,185 C300,140 560,205 900,165 C1160,135 1320,195 1440,168 L1440,240 L0,240 Z"
-          fill="rgba(0,144,77,0.16)"
+          d="M0,190 C300,145 560,210 900,170 C1160,140 1320,200 1440,172 L1440,280 L0,280 Z"
+          fill="rgba(0,184,95,0.14)"
+        />
+        {/* front — darker green, keeps the very bottom filled at all times */}
+        <path
+          d="M0,225 C260,195 520,240 800,212 C1080,186 1300,232 1440,210 L1440,280 L0,280 Z"
+          fill="rgba(0,144,77,0.18)"
         />
       </svg>
     </div>
