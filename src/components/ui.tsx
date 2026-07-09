@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
+import Image from 'next/image';
 import { CheckIcon } from '@/components/icons';
 import { t } from '@/lib/strings';
 
@@ -136,10 +137,15 @@ export function AppHeader() {
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       <div className="bg-brand-gradient-anim h-1.5 w-full" />
-      <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-3">
-        <div className="bg-brand-gradient-anim flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold tracking-tight text-white shadow-sm shadow-emerald-900/20">
-          MNT
-        </div>
+      <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-2.5">
+        <Image
+          src="/mnt-logo.png"
+          alt="Magyar Nemzeti Tanács"
+          width={945}
+          height={1182}
+          priority
+          className="h-16 w-auto shrink-0"
+        />
         <div className="leading-tight">
           <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
             Magyar Nemzeti Tanács

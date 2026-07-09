@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ComponentType, ReactNode, SVGProps } from 'react';
@@ -38,10 +39,15 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       <header className="border-b border-slate-200 bg-white">
         <div className="bg-brand-gradient h-1.5 w-full" />
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="bg-brand-gradient flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold text-white">
-              MNT
-            </div>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <Image
+              src="/mnt-logo.png"
+              alt="Magyar Nemzeti Tanács"
+              width={945}
+              height={1182}
+              priority
+              className="h-12 w-auto shrink-0"
+            />
             <span className="truncate font-bold text-brand-800">{t('common.appName')}</span>
           </div>
           <button
