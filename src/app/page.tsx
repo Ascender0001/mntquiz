@@ -136,7 +136,7 @@ export default function GamePage() {
             <span
               className="absolute -inset-5 rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(253,224,71,0.55), transparent 70%)'
+                background: 'radial-gradient(circle, rgba(254,204,64,0.6), transparent 70%)'
               }}
             />
             <span className="animate-pop-in relative flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient-anim text-white shadow-lg shadow-emerald-900/25">
@@ -144,7 +144,7 @@ export default function GamePage() {
             </span>
           </div>
 
-          <p className="mt-5 text-xs font-bold uppercase tracking-widest text-amber-600">
+          <p className="mt-5 text-xs font-bold uppercase tracking-widest text-gold-600">
             {t('landing.welcome')}
           </p>
           <h1 className="text-gradient bg-brand-gradient-anim mt-1 text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl">
@@ -184,7 +184,7 @@ export default function GamePage() {
     return (
       <PageShell>
         <Card className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-amber-500">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold-100 text-gold-500">
             <MapPinIcon className="h-8 w-8" />
           </div>
           <h1 className="mt-4 text-xl font-bold text-brand-800">{t('common.appName')}</h1>

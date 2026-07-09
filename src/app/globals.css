@@ -42,6 +42,16 @@ body {
   );
 }
 
+/* Hungarian tricolor (from the MNT crest: red / white / green) */
+.bg-tricolor {
+  background-image: linear-gradient(
+    to bottom,
+    #dc2929 0 33.34%,
+    #ffffff 33.34% 66.67%,
+    #007941 66.67% 100%
+  );
+}
+
 /* Gradient text helper */
 .text-gradient {
   background-clip: text;
@@ -226,7 +236,7 @@ body {
   border-radius: 9999px;
   background: repeating-conic-gradient(
     from 0deg,
-    rgba(251, 191, 36, 0.12) 0deg 4deg,
+    rgba(254, 204, 64, 0.14) 0deg 4deg,
     transparent 4deg 17deg
   );
   -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 58%);

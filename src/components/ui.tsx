@@ -48,7 +48,7 @@ function DecorLayer() {
   const particleColors = [
     'rgba(255,255,255,0.9)',
     'rgba(190,242,100,0.85)',
-    'rgba(253,224,71,0.8)'
+    'rgba(254,204,64,0.85)'
   ];
   const particles = Array.from({ length: 8 }, (_, i) => {
     const left = (i * 41 + 6) % 100;
@@ -85,7 +85,7 @@ function DecorLayer() {
           width: '17rem',
           height: '17rem',
           background:
-            'radial-gradient(circle, rgba(253,224,71,0.6), rgba(251,191,36,0.18) 48%, transparent 72%)'
+            'radial-gradient(circle, rgba(254,204,64,0.62), rgba(254,204,64,0.2) 48%, transparent 72%)'
         }}
       />
 
@@ -136,7 +136,7 @@ export function AppHeader() {
       className="relative z-20 border-b border-slate-200 bg-white"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className="bg-brand-gradient-anim h-1.5 w-full" />
+      <div className="bg-tricolor h-2 w-full" />
       <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-2.5">
         <Image
           src="/mnt-logo.png"
@@ -181,7 +181,7 @@ function AppFooter() {
 export function PageShell({ children }: { children: ReactNode }) {
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-gradient-to-b from-amber-50 via-white to-emerald-50"
+      className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-gradient-to-b from-gold-50 via-white to-emerald-50"
       style={{
         paddingLeft: 'env(safe-area-inset-left)',
         paddingRight: 'env(safe-area-inset-right)'
@@ -200,7 +200,7 @@ export function PageShell({ children }: { children: ReactNode }) {
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={`animate-fade-in-up rounded-3xl border border-slate-100 bg-white p-5 shadow-xl shadow-emerald-950/5 ring-1 ring-slate-900/5 sm:p-7 ${className}`}
+      className={`animate-fade-in-up rounded-3xl border border-gold-200/70 bg-white p-5 shadow-xl shadow-emerald-950/5 ring-1 ring-gold-300/25 sm:p-7 ${className}`}
     >
       {children}
     </div>

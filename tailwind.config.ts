@@ -18,6 +18,23 @@ const config: Config = {
           700: '#006c3a',
           800: '#005730',
           900: '#004526'
+        },
+        // Gold from the MNT crest frame / banner (#fecc40)
+        gold: {
+          50: '#fff9e6',
+          100: '#fef2c3',
+          200: '#fee188',
+          300: '#fecc40',
+          400: '#f4b81b',
+          500: '#dc9c08',
+          600: '#b07806',
+          700: '#835905'
+        },
+        // Heraldic red from the crest quarters (#dc2929) — used only for the
+        // Hungarian-tricolor accent, never for UI errors.
+        flag: {
+          red: '#dc2929',
+          green: '#007941'
         }
       }
     }
