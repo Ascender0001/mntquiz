@@ -151,21 +151,34 @@ export default function GamePage() {
             />
           </div>
 
-          <p className="mt-5 text-xs font-bold uppercase tracking-widest text-gold-600">
-            {t('landing.welcome')}
-          </p>
-          <h1 className="text-gradient bg-brand-gradient-anim mt-1 text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl">
+          {/* Greeting flanked by gold rules (heraldic flourish) */}
+          <div className="mt-5 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-gold-300" />
+            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-gold-600">
+              {t('landing.welcome')}
+            </p>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-gold-300" />
+          </div>
+
+          <h1 className="text-gradient bg-brand-gradient-anim mt-2 text-4xl font-extrabold leading-[1.05] tracking-tight">
             {t('common.appName')}
           </h1>
 
-          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
-            <MapPinIcon className="h-3.5 w-3.5" />
-            Palics · Palić
-          </span>
+          {/* Gold diamond divider */}
+          <div className="mx-auto mt-4 flex items-center justify-center gap-2" aria-hidden="true">
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-gold-300" />
+            <span className="h-1.5 w-1.5 rotate-45 bg-gold-400" />
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold-300" />
+          </div>
 
           <p className="mx-auto mt-4 max-w-xs leading-relaxed text-slate-600">
             {t('landing.subtitle')}
           </p>
+
+          <span className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+            <MapPinIcon className="h-3.5 w-3.5" />
+            Palics · Palić
+          </span>
 
           {!GEOFENCE_DISABLED ? (
             <p className="mx-auto mt-3 max-w-xs text-xs leading-relaxed text-slate-500">
