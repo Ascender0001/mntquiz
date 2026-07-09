@@ -160,7 +160,7 @@ export default function GamePage() {
             <span className="h-px w-8 bg-gradient-to-l from-transparent to-gold-300" />
           </div>
 
-          <h1 className="text-gradient bg-brand-gradient-anim mt-2 text-4xl font-extrabold leading-[1.05] tracking-tight">
+          <h1 className="text-gradient bg-brand-gradient-anim mt-2 pb-1 text-4xl font-extrabold leading-tight tracking-tight">
             {t('common.appName')}
           </h1>
 
