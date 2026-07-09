@@ -1,5 +1,4 @@
 import type { ButtonHTMLAttributes, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
-import Image from 'next/image';
 import { CheckIcon } from '@/components/icons';
 import { t } from '@/lib/strings';
 
@@ -127,32 +126,26 @@ function DecorLayer() {
 }
 
 /**
- * Institutional header inspired by mnt.org.rs: white bar, animated brand
- * gradient accent line, wordmark on the left. Compact for mobile.
+ * Bold branded header: a deep-green bar (the crest's green) with a gold
+ * eyebrow + white wordmark and a gold rule beneath (echoing the crest's gold
+ * frame). The crest itself lives on the landing hero, so it's not repeated here.
  */
 export function AppHeader() {
   return (
     <header
-      className="relative z-20 border-b border-slate-200 bg-white"
+      className="bg-brand-gradient-anim relative z-20 shadow-md shadow-emerald-900/20"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className="h-1.5 w-full bg-brand-600" />
-      <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-2.5">
-        <Image
-          src="/mnt-logo.png"
-          alt="Magyar Nemzeti Tanács"
-          width={945}
-          height={1182}
-          priority
-          className="h-16 w-auto shrink-0"
-        />
-        <div className="leading-tight">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
-            Magyar Nemzeti Tanács
-          </p>
-          <p className="text-sm font-bold text-brand-800">{t('common.appName')}</p>
-        </div>
+      <div className="mx-auto max-w-md px-4 py-3.5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-200">
+          Magyar Nemzeti Tanács
+        </p>
+        <p className="mt-0.5 text-xl font-extrabold tracking-tight text-white">
+          {t('common.appName')}
+        </p>
       </div>
+      {/* Gold frame rule, echoing the crest's gold border */}
+      <div className="h-1 w-full bg-gold-300" />
     </header>
   );
 }
