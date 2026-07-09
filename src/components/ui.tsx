@@ -136,7 +136,7 @@ export function AppHeader() {
       className="relative z-20 border-b border-slate-200 bg-white"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className="bg-tricolor h-2 w-full" />
+      <div className="h-1.5 w-full bg-brand-600" />
       <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-2.5">
         <Image
           src="/mnt-logo.png"

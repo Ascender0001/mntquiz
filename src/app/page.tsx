@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
+import Image from 'next/image';
 import { Button, Card, Checkbox, PageShell, TextField } from '@/components/ui';
 import { ArrowLeftIcon, CheckIcon, MapPinIcon, SunIcon } from '@/components/icons';
 import { distanceMeters } from '@/lib/geo';
@@ -132,16 +133,22 @@ export default function GamePage() {
     return (
       <PageShell>
         <Card className="text-center">
-          <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
+          {/* Crest hero with a soft gold halo (the crest's own frame colour) */}
+          <div className="relative mx-auto flex h-28 w-28 items-center justify-center">
             <span
-              className="absolute -inset-5 rounded-full"
+              className="absolute inset-0 -m-3 rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(254,204,64,0.6), transparent 70%)'
+                background: 'radial-gradient(circle, rgba(254,204,64,0.45), transparent 68%)'
               }}
             />
-            <span className="animate-pop-in relative flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient-anim text-white shadow-lg shadow-emerald-900/25">
-              <SunIcon className="h-10 w-10" />
-            </span>
+            <Image
+              src="/mnt-logo.png"
+              alt="Magyar Nemzeti Tanács"
+              width={945}
+              height={1182}
+              priority
+              className="animate-pop-in relative h-28 w-auto"
+            />
           </div>
 
           <p className="mt-5 text-xs font-bold uppercase tracking-widest text-gold-600">
@@ -151,15 +158,17 @@ export default function GamePage() {
             {t('common.appName')}
           </h1>
 
-          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-            <MapPinIcon className="h-3.5 w-3.5 text-brand-600" />
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+            <MapPinIcon className="h-3.5 w-3.5" />
             Palics · Palić
           </span>
 
-          <p className="mx-auto mt-4 max-w-xs text-slate-600">{t('landing.subtitle')}</p>
+          <p className="mx-auto mt-4 max-w-xs leading-relaxed text-slate-600">
+            {t('landing.subtitle')}
+          </p>
 
           {!GEOFENCE_DISABLED ? (
-            <p className="mx-auto mt-4 max-w-xs text-xs leading-relaxed text-slate-500">
+            <p className="mx-auto mt-3 max-w-xs text-xs leading-relaxed text-slate-500">
               {t('landing.locationNeeded')}
             </p>
           ) : null}
