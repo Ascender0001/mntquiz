@@ -7,8 +7,9 @@ import { t } from '@/lib/strings';
  * soft rotating rays, floating light particles, drifting colour blobs and a
  * layered meadow/lake silhouette. Everything animates via transform/opacity
  * (no filter blur, no layout) so it stays smooth on phones, and it's disabled
- * for `prefers-reduced-motion`. Fixed so the scene stays put while content
- * scrolls (a gentle parallax feel).
+ * for `prefers-reduced-motion`. Absolute (not fixed) so it scrolls with the
+ * page — a fixed layer jumps on mobile as the URL bar shows/hides and repaints
+ * during scroll.
  */
 function DecorLayer() {
   const blobs: { cls: string; style: CSSProperties }[] = [
@@ -70,7 +71,7 @@ function DecorLayer() {
   });
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       {/* Sun */}
       <div
         className="sun-rays"
